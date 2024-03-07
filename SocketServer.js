@@ -13,25 +13,19 @@ app.use(
     origin: process.env.REACT_ORIGIN,
   })
 );
-const connectedUsers = new Map();
+const connectedUsers = []
 
 io.on("connection", (socket) => { 
   console.log("A user is connected")  ;
+  socket.on("staffConnection",({emailId})=>{
+    console.log(emailId , " : email id");
+  })
   const socketId = socket.id;
   console.log(socketId, " socketId");
-  socket.on("message", ({ message, resiverId }) => {
-    console.log(connectedUsers, "connected users");
-    const resiverSocket = connectedUsers.get(resiverId);
-       console.log(resiverSocket , "resiver socket");
-    if (resiverSocket) {
-      console.log(`message is : ${message} & id is :- ${resiverId}`);
-      resiverSocket.emit("message", message);
-    } else {
-      console.log("resiver is not connected");
-    }
+  socket.on("message", ({ message, socketId }) => {
+    console.log(message, "message from  staff");
+      console.log(`message is : ${message} & id is :- ${socketId}`);
   });
-
-  connectedUsers.set(socketId, socket);
 });
 server.listen(port, () => {
   console.log(" Socket connected");
