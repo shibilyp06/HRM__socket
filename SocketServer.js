@@ -13,18 +13,21 @@ app.use(
     origin: process.env.REACT_ORIGIN,
   })
 );
-const connectedUsers = []
+const connectedUsers = [];
 
-io.on("connection", (socket) => { 
-  console.log("A user is connected")  ;
-  socket.on("staffConnection",({emailId})=>{
-    console.log(emailId , " : email id");
-  })
+io.on("connection", (socket) => {
+  console.log("A user is connected");
+  socket.on("staffConnection", ({ staffEmail }) => {
+    console.log(staffEmail, " : from staff email id");
+  });
+  socket.on("adminConnection", ({ adminEmail }) => {
+    console.log(adminEmail, " : from Admin email id");
+  });
   const socketId = socket.id;
   console.log(socketId, " socketId");
   socket.on("message", ({ message, socketId }) => {
     console.log(message, "message from  staff");
-      console.log(`message is : ${message} & id is :- ${socketId}`);
+    console.log(`message is : ${message} & id is :- ${socketId}`);
   });
 });
 server.listen(port, () => {
