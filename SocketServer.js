@@ -16,7 +16,6 @@ app.use(
 const connectedUsers = [];
 
 io.on("connection", (socket) => {
-  console.log("A user is connected");
   socket.on("staffConnection", ({ staffEmail }) => {
     console.log(staffEmail, " : from staff email id");
   });
@@ -25,9 +24,8 @@ io.on("connection", (socket) => {
   });
   const socketId = socket.id;
   console.log(socketId, " socketId");
-  socket.on("message", ({ message, socketId }) => {
-    console.log(message, "message from  staff");
-    console.log(`message is : ${message} & id is :- ${socketId}`);
+  socket.on("message", ({ message, sender,receiver }) => {
+    console.log(`${message} from ${sender} to ${receiver} `);
   });
 });
 server.listen(port, () => {
