@@ -17,15 +17,22 @@ const connectedUsers = [];
 
 io.on("connection", (socket) => {
   socket.on("staffConnection", ({ staffEmail }) => {
-    console.log(staffEmail, " : from staff email id");
+    connectedUsers[staffEmail] = socket.id;
+    console.log(`${staffEmail} connected, Staff ID: ${socket.id}`);
   });
   socket.on("adminConnection", ({ adminEmail }) => {
-    console.log(adminEmail, " : from Admin email id");
+    connectedUsers[adminEmail] = socket.id;
+    console.log(`${adminEmail}  connected, Admin ID: ${socket.id}`);
   });
-  const socketId = socket.id;
-  console.log(socketId, " socketId");
-  socket.on("message", ({ message, sender,receiver }) => {
+  socket.on("message", ({ message, sender, receiver }) => {
     console.log(`${message} from ${sender} to ${receiver} `);
+    const receiverId = connectedUsers[receiver];
+    if (receiverId) {
+      io.to(receiverId).emit("message", { message, sender });
+      console.log(`Message sent to ${receiver}`);
+    } else {
+      console.log(`Recipient ${receiver} not found`);
+    }
   });
 });
 server.listen(port, () => {
