@@ -4,17 +4,16 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const io = new Server(server);
-const messageRouter = require("./router/messageRouter")
+const messageRouter = require("./router/messageRouter");
 require("dotenv").config();
+const mongoose = require("./config/mongooseConfig");
 const port = 3000;
-const mongoose = require("./config/mongooseConfig")
 const cors = require("cors");
 
-app.use(
-  cors({
-    origin: process.env.REACT_ORIGIN,
-  })
-);
+app.use(cors());
+app.use(express.json());
+
+app.use("/message", messageRouter);
 const connectedUsers = [];
 
 io.on("connection", (socket) => {
