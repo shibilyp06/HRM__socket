@@ -17,6 +17,10 @@ app.use("/message", messageRouter);
 const connectedUsers = [];
 
 io.on("connection", (socket) => {
+  socket.on("studentConnection", ({ studentEmail }) => {
+    connectedUsers[studentEmail] = socket.id;
+    console.log(`${studentEmail} connected, Staff ID: ${socket.id}`);
+  });
   socket.on("staffConnection", ({ staffEmail }) => {
     connectedUsers[staffEmail] = socket.id;
     console.log(`${staffEmail} connected, Staff ID: ${socket.id}`);
@@ -29,7 +33,7 @@ io.on("connection", (socket) => {
     console.log(`${message} from ${sender} to ${receiver} `);
     const receiverId = connectedUsers[receiver];
     if (receiverId) {
-      io.to(receiverId).emit("message", { message, sender });
+      io.to(receiverId).emit("message", { message, sender, receiver });
       console.log(`Message sent to ${receiver}`);
     } else {
       console.log(`Recipient ${receiver} not found`);

@@ -16,5 +16,14 @@ const object = {
       res.status(500).json({ error: err });
     }
   },
+  getMessages: async (req, res) => {
+    try {
+      const messages = await MessageModel.find();
+      res.status(200).json({ message: "Message send to frontend", messages });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: err });
+    }
+  },
 };
 module.exports = object;
